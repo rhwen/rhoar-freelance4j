@@ -22,7 +22,7 @@
     <version>23</version>
   </parent>
   <groupId>org.openshift.appgen</groupId>
-  <artifactId>my-app</artifactId>
+  <artifactId>freelancer-service</artifactId>
   <version>1.0.0</version>
   <name>freelancer-service</name>
   <description>Generated Application 'freelancer-service'</description>
