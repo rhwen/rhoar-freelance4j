@@ -1,0 +1,9 @@
+swarm:
+  http:
+    port: 18080
+freelancer:
+  service: 
+    url: http://127.0.0.1:8089/
+project:
+  service:
+    url: http://127.0.0.1:8089/
