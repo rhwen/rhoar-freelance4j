@@ -16,9 +16,25 @@
 
 package io.openshift.booster;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
+import io.openshift.booster.http.FreelancersEndpoint;
+import io.openshift.booster.http.ProjectsEndpoint;
+
 @ApplicationPath("/")
 public class RestApplication extends Application {
+
+	public RestApplication() {
+	}
+
+	@Override
+	public Set<Class<?>> getClasses() {
+		return new HashSet<Class<?>>(
+				Arrays.asList(HelloEndpoint.class, FreelancersEndpoint.class, ProjectsEndpoint.class));
+	}
 }

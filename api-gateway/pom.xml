@@ -23,7 +23,7 @@
 	<description>Generated Application 'api-gateway'</description>
 	<properties>
 		<slf4j.version>1.7.25</slf4j.version>
-		<version.thorntail>2.2.0.Final-redhat-00021</version.thorntail>
+		<version.thorntail>2.4.0.Final</version.thorntail>
 		<version.restassured>3.0.7</version.restassured>
 		<version.assertj>3.8.0</version.assertj>
 		<version.resteasy>3.0.24.Final</version.resteasy>
@@ -38,13 +38,6 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
-			<dependency>
-		        <groupId>io.thorntail</groupId>
-		        <artifactId>bom-certified</artifactId>
-		        <version>${version.thorntail}</version>
-		        <type>pom</type>
-		        <scope>import</scope>
-		      </dependency>
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
@@ -54,15 +47,7 @@
 		</dependency>
 		<dependency>
 			<groupId>io.thorntail</groupId>
-			<artifactId>microprofile-health</artifactId>
-		</dependency>
-	    <dependency>
-	      <groupId>io.thorntail</groupId>
-	      <artifactId>undertow</artifactId>
-	    </dependency>
-		<dependency>
-			<groupId>io.thorntail</groupId>
-			<artifactId>jaxrs-jsonp</artifactId>
+			<artifactId>jaxrs</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
@@ -138,12 +123,14 @@
 						</goals>
 					</execution>
 				</executions>
+				<!-- 
 				<configuration>
 					<arguments>
 						<argument>-S</argument>
 						<argument>local</argument>
 					</arguments>
 				</configuration>
+				 -->
 			</plugin>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
