@@ -3,11 +3,15 @@ package io.openshift.booster;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.openshift.booster.api.ApiVerticle;
+import io.openshift.booster.service.ProjectService;
 import io.openshift.booster.service.ProjectVerticle;
 import io.vertx.config.ConfigRetrieverOptions;
 import io.vertx.config.ConfigStoreOptions;
+import io.vertx.core.CompositeFuture;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
+import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rxjava.config.ConfigRetriever;
 import io.vertx.rxjava.core.AbstractVerticle;
@@ -46,13 +50,16 @@ public class MainApplication extends AbstractVerticle {
 
 	private void deployVerticles(JsonObject config, Future<Void> startFuture) {
 
+		Future<String> apiVerticleFuture = Future.future();
 		Future<String> projectVerticleFuture = Future.future();
 
+		ProjectService projectService = ProjectService.createProxy((Vertx) vertx);
 		DeploymentOptions options = new DeploymentOptions();
 		options.setConfig(config);
 		vertx.deployVerticle(new ProjectVerticle(), options, projectVerticleFuture.completer());
+		vertx.deployVerticle(new ApiVerticle(projectService), options, apiVerticleFuture.completer());
 
-		projectVerticleFuture.setHandler(ar -> {
+		CompositeFuture.all(apiVerticleFuture, projectVerticleFuture).setHandler(ar -> {
 			if (ar.succeeded()) {
 				log.info("Verticles deployed successfully.");
 				startFuture.complete();

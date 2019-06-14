@@ -30,14 +30,14 @@ public class ApiVerticle extends AbstractVerticle {
 
 		router.get("/projects").handler(this::getProjects);
 		router.get("/projects/:projectId").handler(this::getProjectById);
-		router.get("/projects/:projectStatus").handler(this::getProjectsByStatus);
+		router.get("/projects/status/:projectStatus").handler(this::getProjectsByStatus);
 
 		// Health Checks
 		router.get("/health/readiness").handler(rc -> rc.response().end("OK"));
 		HealthCheckHandler healthCheckHandler = HealthCheckHandler.create(vertx).register("health", f -> health(f));
 		router.get("/health/liveness").handler(healthCheckHandler);
 
-		vertx.createHttpServer().requestHandler(router::accept).listen(config().getInteger("catalog.http.port", 8080),
+		vertx.createHttpServer().requestHandler(router::accept).listen(config().getInteger("project.http.port", 8080),
 				result -> {
 					if (result.succeeded()) {
 						startFuture.complete();
