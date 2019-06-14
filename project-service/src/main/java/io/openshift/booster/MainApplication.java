@@ -1,56 +1,72 @@
 package io.openshift.booster;
 
-import java.util.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import io.openshift.booster.service.ProjectVerticle;
+import io.vertx.config.ConfigRetrieverOptions;
+import io.vertx.config.ConfigStoreOptions;
+import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
+import io.vertx.core.json.JsonObject;
+import io.vertx.rxjava.config.ConfigRetriever;
 import io.vertx.rxjava.core.AbstractVerticle;
-import io.vertx.rxjava.ext.web.Router;
-import io.vertx.rxjava.ext.web.handler.BodyHandler;
-import io.vertx.rxjava.ext.web.handler.StaticHandler;
-import rx.Observable;
 
 public class MainApplication extends AbstractVerticle {
 
-  @Override
-  public void start(final Future<Void> future) {
-    // Create Router
-    Router router = createRouter();
+	Logger log = LoggerFactory.getLogger(MainApplication.class);
 
-    Observable.from(getRouterConsumers())
-      .filter(Objects::nonNull)
-      .flatMapCompletable(r -> {
-        r.accept(router);
-        return r.start();
-      })
-      .toCompletable()
-      .doOnCompleted(future::complete)
-      .doOnError(future::fail)
-      .subscribe(() ->
-                   vertx.createHttpServer()
-                     .requestHandler(router)
-                     .rxListen(config().getInteger("http.port", 8080))
-                     .subscribe(httpServer ->
-                                  System.out.println("Server started on port " + httpServer.actualPort()))
+	@Override
+	public void start(final Future<Void> future) {
 
-      );
-  }
+		ConfigStoreOptions jsonConfigStore = new ConfigStoreOptions().setType("json");
+		ConfigStoreOptions appStore = new ConfigStoreOptions().setType("configmap").setFormat("yaml")
+				.setConfig(new JsonObject().put("name", System.getenv("APP_CONFIGMAP_NAME")).put("key",
+						System.getenv("APP_CONFIGMAP_KEY")));
 
-  private Router createRouter() {
-    // Create a router object.
-    Router router = Router.router(vertx);
-    // enable parsing of request bodies
-    router.route().handler(BodyHandler.create());
+		ConfigRetrieverOptions options = new ConfigRetrieverOptions();
+		if (System.getenv("KUBERNETES_NAMESPACE") != null) {
+			// we're running in Kubernetes
+			options.addStore(appStore);
+		} else {
+			// default to json based config
+			jsonConfigStore.setConfig(config());
+			options.addStore(jsonConfigStore);
+		}
 
-    // health check
-    router.get("/health").handler(rc -> rc.response().end("OK"));
+		ConfigRetriever.create(vertx, options).getConfig(ar -> {
+			if (ar.succeeded()) {
+				deployVerticles(ar.result(), future);
+			} else {
+				log.error("Failed to retrieve the configuration.");
+				future.fail(ar.cause());
+			}
+		});
+	}
 
-    // web interface
-    router.get().handler(StaticHandler.create());
-    return router;
-  }
+	private void deployVerticles(JsonObject config, Future<Void> startFuture) {
 
-  private RouterConsumer[] getRouterConsumers() {
-    return new RouterConsumer[]{
-    };
-  }
+		Future<String> projectVerticleFuture = Future.future();
+
+		DeploymentOptions options = new DeploymentOptions();
+		options.setConfig(config);
+		vertx.deployVerticle(new ProjectVerticle(), options, projectVerticleFuture.completer());
+
+		projectVerticleFuture.setHandler(ar -> {
+			if (ar.succeeded()) {
+				log.info("Verticles deployed successfully.");
+				startFuture.complete();
+			} else {
+				log.warn("WARNINIG: Verticles NOT deployed successfully.");
+				startFuture.fail(ar.cause());
+			}
+		});
+
+	}
+
+	@Override
+	public void stop(Future<Void> stopFuture) throws Exception {
+		super.stop(stopFuture);
+	}
+
 }
