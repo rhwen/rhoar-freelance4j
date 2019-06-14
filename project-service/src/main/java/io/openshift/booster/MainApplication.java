@@ -53,7 +53,7 @@ public class MainApplication extends AbstractVerticle {
 		Future<String> apiVerticleFuture = Future.future();
 		Future<String> projectVerticleFuture = Future.future();
 
-		ProjectService projectService = ProjectService.createProxy((Vertx) vertx);
+		ProjectService projectService = ProjectService.createProxy(vertx.getDelegate());
 		DeploymentOptions options = new DeploymentOptions();
 		options.setConfig(config);
 		vertx.deployVerticle(new ProjectVerticle(), options, projectVerticleFuture.completer());
