@@ -97,7 +97,6 @@
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jackson2-provider</artifactId>
 			<version>${version.resteasy}</version>
-			<scope>test</scope>
 		</dependency>
 
     <dependency>
@@ -106,6 +105,13 @@
       <version>2.6.0</version>
       <scope>test</scope>
     </dependency>
+    
+    		<!-- Logging -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
     
 		<!-- <dependency> <groupId>org.arquillian.cube</groupId> <artifactId>arquillian-cube-openshift</artifactId> 
 			<scope>test</scope> <exclusions> <exclusion> <artifactId>undertow-core</artifactId> 
@@ -212,6 +218,7 @@
 			</build>
 		</profile>
 	</profiles>
+	
 	<repositories>
     <repository>
       <id>jboss</id>
@@ -282,5 +289,6 @@
       </snapshots>
     </pluginRepository>
   </pluginRepositories>
+  
 </project>
 
