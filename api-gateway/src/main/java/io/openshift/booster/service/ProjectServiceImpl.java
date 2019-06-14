@@ -3,7 +3,6 @@ package io.openshift.booster.service;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.ServiceUnavailableException;
 import javax.ws.rs.client.ClientBuilder;
@@ -17,7 +16,7 @@ import org.wildfly.swarm.spi.runtime.annotations.ConfigurationValue;
 
 import io.openshift.booster.model.Project;
 
-@ApplicationScoped
+
 public class ProjectServiceImpl implements ProjectService {
 
 	@Inject

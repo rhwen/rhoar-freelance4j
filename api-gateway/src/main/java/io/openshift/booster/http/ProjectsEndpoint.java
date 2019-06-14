@@ -20,7 +20,6 @@ package io.openshift.booster.http;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -32,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import io.openshift.booster.model.Project;
 import io.openshift.booster.service.ProjectService;
+import io.openshift.booster.service.ProjectServiceImpl;
 
 @Path("/projects")
 @ApplicationScoped
@@ -39,8 +39,8 @@ public class ProjectsEndpoint {
 
 	Logger log = LoggerFactory.getLogger(ProjectsEndpoint.class);
 
-	@Inject
-	private ProjectService service;
+	
+	private ProjectService service  = new ProjectServiceImpl();
 
 	@GET
 	@Path("/")
