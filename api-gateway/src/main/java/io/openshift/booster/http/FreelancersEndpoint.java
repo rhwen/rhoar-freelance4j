@@ -27,12 +27,17 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.openshift.booster.model.Freelancer;
 import io.openshift.booster.service.FreelancerService;
 
 @Path("/freelancers")
 @ApplicationScoped
 public class FreelancersEndpoint {
+
+	Logger log = LoggerFactory.getLogger(FreelancersEndpoint.class);
 
 	@Inject
 	private FreelancerService service;
@@ -41,6 +46,7 @@ public class FreelancersEndpoint {
 	@Path("/")
 	@Produces("application/json")
 	public Response getFreelancers() {
+		log.info("get freelancers");
 		List<Freelancer> freelancers = service.getFreelancers();
 		return Response.ok(freelancers).build();
 	}
@@ -49,6 +55,7 @@ public class FreelancersEndpoint {
 	@Path("/{freelancerId}")
 	@Produces("application/json")
 	public Response getFreelancers(@PathParam("freelancerId") Integer id) {
+		log.info("get freelancer by id:", id);
 		Freelancer freelancer = service.getFreelancerById(id);
 		return Response.ok(freelancer).build();
 	}

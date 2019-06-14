@@ -27,12 +27,17 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import io.openshift.booster.model.Project;
 import io.openshift.booster.service.ProjectService;
 
 @Path("/projects")
 @ApplicationScoped
 public class ProjectsEndpoint {
+
+	Logger log = LoggerFactory.getLogger(ProjectsEndpoint.class);
 
 	@Inject
 	private ProjectService service;
@@ -41,6 +46,7 @@ public class ProjectsEndpoint {
 	@Path("/")
 	@Produces("application/json")
 	public Response getProjects() {
+		log.info("get projects.");
 		List<Project> projects = service.getProjects();
 		return Response.ok(projects).build();
 	}
@@ -49,6 +55,7 @@ public class ProjectsEndpoint {
 	@Path("/{projectId}")
 	@Produces("application/json")
 	public Response getProjectById(@PathParam("projectId") Integer id) {
+		log.info("get project by id:", id);
 		Project project = service.getProjectById(id);
 		return Response.ok(project).build();
 	}
@@ -57,6 +64,7 @@ public class ProjectsEndpoint {
 	@Path("/status/{theStatus}")
 	@Produces("application/json")
 	public Response getProjectByStatus(@PathParam("theStatus") String status) {
+		log.info("get project by status:", status);
 		List<Project> projects = service.getProjectsByStatus(status);
 		return Response.ok(projects).build();
 	}
