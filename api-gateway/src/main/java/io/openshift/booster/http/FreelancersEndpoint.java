@@ -33,7 +33,7 @@ import io.openshift.booster.model.Freelancer;
 import io.openshift.booster.service.FreelancerService;
 import io.openshift.booster.service.FreelancerServiceImpl;
 
-@Path("/freelancers")
+@Path("/gateway/freelancers")
 @ApplicationScoped
 public class FreelancersEndpoint {
 

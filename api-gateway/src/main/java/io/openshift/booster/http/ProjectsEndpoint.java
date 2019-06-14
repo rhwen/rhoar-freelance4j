@@ -33,7 +33,7 @@ import io.openshift.booster.model.Project;
 import io.openshift.booster.service.ProjectService;
 import io.openshift.booster.service.ProjectServiceImpl;
 
-@Path("/projects")
+@Path("/gateway/projects")
 @ApplicationScoped
 public class ProjectsEndpoint {
 
