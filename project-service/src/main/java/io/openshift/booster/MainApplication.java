@@ -11,7 +11,6 @@ import io.vertx.config.ConfigStoreOptions;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
-import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 import io.vertx.rxjava.config.ConfigRetriever;
 import io.vertx.rxjava.core.AbstractVerticle;

@@ -13,7 +13,7 @@ import io.vertx.ext.mongo.MongoClient;
 @ProxyGen
 public interface ProjectService {
 
-	final static String ADDRESS = "catalog-service";
+	final static String ADDRESS = "project-service";
 
 	static ProjectService create(Vertx vertx, JsonObject config, MongoClient client) {
 		return new ProjectServiceImpl(vertx, config, client);

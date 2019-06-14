@@ -50,7 +50,7 @@ public class ApiVerticleTest {
 		ServerSocket socket = new ServerSocket(0);
 		port = socket.getLocalPort();
 		socket.close();
-		DeploymentOptions options = new DeploymentOptions().setConfig(new JsonObject().put("catalog.http.port", port));
+		DeploymentOptions options = new DeploymentOptions().setConfig(new JsonObject().put("project.http.port", port));
 		projectService = mock(ProjectService.class);
 		vertx.deployVerticle(new ApiVerticle(projectService), options, context.asyncAssertSuccess());
 	}
